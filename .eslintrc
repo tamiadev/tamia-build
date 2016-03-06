@@ -1,0 +1,7 @@
+{
+	"parser": "babel-eslint",
+	"extends": "tamia",
+	"rules": {
+		"no-use-before-define": 0
+	}
+}
