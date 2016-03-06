@@ -7,14 +7,12 @@ var env = process.env.NODE_ENV || 'development';
 module.exports = {
 	context: process.cwd(),
 
-	entry: [
-		'./js/index.js',
-	],
+	entry: './js/index.js',
 
 	output: {
 		path: path.resolve(process.cwd(), 'public/build'),
 		publicPath: '/build/',
-		filename: 'bundle.js',
+		filename: '[name].js',
 	},
 
 	resolve: {

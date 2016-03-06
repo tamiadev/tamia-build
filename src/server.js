@@ -8,8 +8,6 @@ import makeWebpackConfig from '../config/webpack.development.config';
 
 /* eslint-disable no-console */
 
-const PUBLIC_DIR = 'public';
-
 export default function server(options, callback) {
 	let webpackConfig = makeWebpackConfig(options);
 
@@ -21,7 +19,8 @@ export default function server(options, callback) {
 
 	// Inject Webpack bundle
 	app.use(staticTransform({
-		root: PUBLIC_DIR,
+		root: 'public',
+
 		// The middleware expects a regex, but we can use a duck object to match /yo/index.html as well as /yo/foo?a=1
 		match: {
 			test(str) {
@@ -30,6 +29,7 @@ export default function server(options, callback) {
 				return basename === '' || basename.substr(-5) === '.html';
 			},
 		},
+
 		// Append index.html to a path if needed
 		normalize(requestPath) {
 			requestPath = requestPath.split('?')[0];
@@ -46,17 +46,17 @@ export default function server(options, callback) {
 				'<!-- styles.css was removed by Tâmia dev server -->'
 			);
 
-			// Load Webpack bundle from Webpack dev server
+			// Load Webpack main bundle from Webpack dev server
 			let webpackUrl = `http://${options.host}:${options.webpackPort}`;
-			if (/<script src="\/build\/bundle.js/.test(html)) {
+			if (/<script src="\/build\/main.js/.test(html)) {
 				html = html.replace(
-					/<script src="\/build\/bundle.js(?:\?\d+)?"><\/script>/,
+					/<script src="\/build\/main.js(?:\?\d+)?"><\/script>/,
 					''
 				);
 			}
 			html = html.replace(
 				'</body>',
-				`<script src="${webpackUrl}/build/bundle.js"></script>\n</body>`
+				`<script src="${webpackUrl}/build/main.js"></script>\n</body>`
 			);
 
 			send(html, { 'Content-Type': 'text/html; charset=utf-8' });
@@ -64,7 +64,7 @@ export default function server(options, callback) {
 	}));
 
 	// Serve other static assets
-	app.use(express.static(PUBLIC_DIR));
+	app.use(express.static('public'));
 
 	app.listen(options.port, options.host, callback);
 
