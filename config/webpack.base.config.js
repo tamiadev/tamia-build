@@ -1,13 +1,29 @@
 var path = require('path');
+var glob = require('glob');
 var webpack = require('webpack');
 var autoprefixer = require('autoprefixer');
 
 var env = process.env.NODE_ENV || 'development';
 
+// Generate entries for all scripts
+var scripts = glob.sync('js/*.js');
+if (!scripts.length) {
+	throw new Error('No scripts found in "js" folder.');
+}
+if (scripts.indexOf('js/main.js') === -1) {
+	throw new Error('Main script not found: "js/main.js".');
+}
+var entries = {
+	main: entries,
+};
+scripts.forEach(function(script) {
+	entries[path.basename(script, '.js')] = './' + script;
+});
+
 module.exports = {
 	context: process.cwd(),
 
-	entry: './js/index.js',
+	entry: entries,
 
 	output: {
 		path: path.resolve(process.cwd(), 'public/build'),

@@ -46,7 +46,7 @@ const saveJson = (filepath, content) => {
 
 export default function build(callback) {
 	// Copy files
-	copyTemplate('js/index.js');
+	copyTemplate('js/main.js');
 	copyTemplate('styles/index.styl');
 	copyTemplate('styles/styles.styl');
 	copyTemplate('styles/config.styl');
