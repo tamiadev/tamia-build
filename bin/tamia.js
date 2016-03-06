@@ -17,6 +17,7 @@ program
 	.option('-h, --host <host>', 'dev server host (localhost)', 'localhost')
 	.option('-p, --port <port>', 'dev server port (6601)', 6601)
 	.option('-w, --webpack-port <port>', 'webpack dev server port (6602)', 6602)
+	.option('-u, --no-compress', 'disable compression for production build')
 ;
 
 program
