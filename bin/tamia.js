@@ -38,16 +38,15 @@ program
 	})
 ;
 
-
 program
-	.command('build')
-	.description('build site')
+	.command('bundle')
+	.description('bundle assets')
 	.action(function() {
 		process.env.NODE_ENV = 'production';
 
 		console.log('Bundling assets...');
 		console.log();
-		require('../lib/build').default(program, function(err, stats) {
+		require('../lib/bundle').default(program, function(err, stats) {
 			if (err) {
 				console.log(err);
 				process.exit(1);

@@ -44,7 +44,7 @@ const saveJson = (filepath, content) => {
 	}
 };
 
-export default function build(callback) {
+export default function init(callback) {
 	// Copy files
 	copyTemplate('js/main.js');
 	copyTemplate('styles/index.styl');
@@ -59,7 +59,7 @@ export default function build(callback) {
 	let pkg = fs.readJsonSync('package.json');
 
 	// Create npm scripts
-	pkg = addScript(pkg, 'bundle', 'tamia build');
+	pkg = addScript(pkg, 'bundle', 'tamia bundle');
 	pkg = addScript(pkg, 'start', 'tamia server');
 
 	// Save package.json
