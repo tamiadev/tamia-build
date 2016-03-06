@@ -3,6 +3,9 @@
 
 var program = require('commander');
 var chalk = require('chalk');
+var Table = require('easy-table');
+var gzipSize = require('gzip-size');
+var _ = require('lodash');
 var pkg = require('../package.json');
 
 /* eslint-disable no-console */
@@ -41,7 +44,7 @@ program
 	.action(function() {
 		process.env.NODE_ENV = 'production';
 
-		console.log('Building site...');
+		console.log('Bundling assets...');
 		console.log();
 		require('../lib/build').default(program, function(err, stats) {
 			if (err) {
@@ -50,20 +53,45 @@ program
 			}
 
 			if (stats.hasErrors()) {
-				stats.compilation.errors.forEach(function(item) {
-					console.log(chalk.red(item.stack || item));
-				});
+				var error = stats.compilation.errors[0];
+				console.log();
+				console.log(chalk.red(error.toString()));
 				process.exit(1);
 			}
 
 			if (stats.hasWarnings()) {
 				stats.compilation.warnings.forEach(function(item) {
+					console.log();
 					console.log(chalk.yellow('Warning: ', item.message));
 				});
 			}
 
+			// Print time
+			var time = (stats.endTime - stats.startTime) / 1000;
+			console.log('Done in', time, 's');
 			console.log();
-			console.log('Done.');
+
+			// Print stats
+			var table = new Table();
+			Object.keys(stats.compilation.assets).forEach(function(name) {
+				var asset = stats.compilation.assets[name];
+				var code = asset._value;
+				if (!code && asset.children) {
+					code = asset.children.reduce(function(concatenated, child) {
+						return concatenated + child._value;
+					}, '');
+				}
+
+				var size = code.length;
+				var gzipped = gzipSize.sync(code);
+
+				table.cell('File', chalk.bold(name));
+				table.cell('Size, KB', size / 1024, Table.number(2));
+				table.cell('Gzipped, KB', gzipped / 1024, Table.number(2));
+				table.cell('Ratio', _.padStart(Math.round((gzipped / size) * 100) + '%', 5));
+				table.newRow();
+			});
+			console.log(table.toString());
 		});
 	})
 ;
