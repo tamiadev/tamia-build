@@ -65,6 +65,16 @@ export default function server(options, callback) {
 				`<script src="${webpackUrl}/build/$1.js"></script>`
 			);
 
+			// Replace inlined assets with links to Webpack dev server
+			html = html.replace(
+				/<script>\/\*(\w+)\*\/.*<\/script>/g,
+				`<script src="${webpackUrl}/build/$1.js"></script>`
+			);
+			html = html.replace(
+				/<style>\/\*(\w+)\*\/.*<\/style>/g,
+				`<link href="${webpackUrl}/build/$1.css" rel="stylesheet">`
+			);
+
 			send(html, { 'Content-Type': 'text/html; charset=utf-8' });
 		},
 	}));
