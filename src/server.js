@@ -59,6 +59,12 @@ export default function server(options, callback) {
 				`<script src="${webpackUrl}/build/main.js"></script>\n</body>`
 			);
 
+			// Replace other bundles with links to Webpack dev server
+			html = html.replace(
+				/<script src="\/build\/(\w+)\.js(?:\?\d+)?"><\/script>/g,
+				`<script src="${webpackUrl}/build/$1.js"></script>`
+			);
+
 			send(html, { 'Content-Type': 'text/html; charset=utf-8' });
 		},
 	}));
