@@ -43,14 +43,9 @@ export default function server(options, callback) {
 		},
 
 		transform: (path, html, send) => {
-			// Remove stylesheet link, CSS will be injected by Webpack bundle
-			html = html.replace(
-				/<link href="\/build\/styles\.css(?:\?\d+)?" rel="stylesheet">/,
-				'<!-- styles.css was removed by Tâmia dev server -->'
-			);
+			let webpackUrl = `http://${options.host}:${options.webpackPort}`;
 
 			// Load Webpack main bundle from Webpack dev server
-			let webpackUrl = `http://${options.host}:${options.webpackPort}`;
 			if (/<script src="\/build\/main\.js/.test(html)) {
 				html = html.replace(
 					/<script src="\/build\/main\.js(?:\?\d+)?"><\/script>/,
@@ -76,6 +71,12 @@ export default function server(options, callback) {
 			html = html.replace(
 				/<style>\/\*(\w+)\*\/[\s\S]*?<\/style>/gm,
 				`<link href="${webpackUrl}/build/$1.css" rel="stylesheet">`
+			);
+
+			// Remove stylesheet link, CSS will be injected by Webpack bundle
+			html = html.replace(
+				/<link href="(http:\/\/[:\w]+.*?)?\/build\/styles\.css(?:\?\d+)?" rel="stylesheet">/,
+				'<!-- styles.css was removed by Tâmia dev server -->'
 			);
 
 			send(html, { 'Content-Type': 'text/html; charset=utf-8' });
