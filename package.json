@@ -1,17 +1,16 @@
 {
   "name": "tamia-build",
-  "version": "1.0.0",
+  "version": "0.1.0",
   "description": "Tâmia Webpack builder and dev server",
-  "main": "index.js",
   "bin": {
     "tamia": "bin/tamia.js"
   },
   "scripts": {
     "test": "npm run lint",
+    "prepublish": "npm run compile",
     "lint": "eslint src",
     "compile": "babel -d lib/ src/",
-    "compile:watch": "babel --watch -d lib/ src/",
-    "prepublish": "npm run compile"
+    "compile:watch": "babel --watch -d lib/ src/"
   },
   "homepage": "http://tamiadev.github.io/tamia/",
   "author": {
