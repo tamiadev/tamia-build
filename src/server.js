@@ -26,15 +26,18 @@ export default function server(options, callback) {
 			test(str) {
 				const { pathname } = url.parse(str);
 				const basename = pathname.split('/').pop();
-				return basename === '' || basename.substr(-5) === '.html';
+				return !basename.includes('.') || basename.endsWith('.html');
 			},
 		},
 
 		// Append index.html to a path if needed
 		normalize(requestPath) {
 			requestPath = requestPath.split('?')[0];
-			if (requestPath.substr(-1) === '/') {
+			if (requestPath.endsWith('/')) {
 				requestPath += 'index.html';
+			}
+			else if (!requestPath.includes('.')) {
+				requestPath += '.html';
 			}
 			return requestPath;
 		},
