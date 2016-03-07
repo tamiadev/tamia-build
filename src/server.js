@@ -70,11 +70,11 @@ export default function server(options, callback) {
 
 			// Replace inlined assets with links to Webpack dev server
 			html = html.replace(
-				/<script>\/\*(\w+)\*\/.*<\/script>/g,
+				/<script>\/\*(\w+)\*\/[\s\S]*?<\/script>/gm,
 				`<script src="${webpackUrl}/build/$1.js"></script>`
 			);
 			html = html.replace(
-				/<style>\/\*(\w+)\*\/.*<\/style>/g,
+				/<style>\/\*(\w+)\*\/[\s\S]*?<\/style>/gm,
 				`<link href="${webpackUrl}/build/$1.css" rel="stylesheet">`
 			);
 
