@@ -42,15 +42,15 @@ export default function server(options, callback) {
 		transform: (path, html, send) => {
 			// Remove stylesheet link, CSS will be injected by Webpack bundle
 			html = html.replace(
-				/<link href="\/build\/styles.css(?:\?\d+)?" rel="stylesheet">/,
+				/<link href="\/build\/styles\.css(?:\?\d+)?" rel="stylesheet">/,
 				'<!-- styles.css was removed by Tâmia dev server -->'
 			);
 
 			// Load Webpack main bundle from Webpack dev server
 			let webpackUrl = `http://${options.host}:${options.webpackPort}`;
-			if (/<script src="\/build\/main.js/.test(html)) {
+			if (/<script src="\/build\/main\.js/.test(html)) {
 				html = html.replace(
-					/<script src="\/build\/main.js(?:\?\d+)?"><\/script>/,
+					/<script src="\/build\/main\.js(?:\?\d+)?"><\/script>/,
 					''
 				);
 			}
