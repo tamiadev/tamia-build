@@ -71,6 +71,10 @@ program
 			console.log('Done in', time, 's');
 			console.log();
 
+			if (!program.compress) {
+				return;
+			}
+
 			// Print stats
 			var table = new Table();
 			Object.keys(stats.compilation.assets).forEach(function(name) {
