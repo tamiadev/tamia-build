@@ -1,6 +1,6 @@
 {
   "name": "tamia-build",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Tâmia Webpack builder and dev server",
   "bin": {
     "tamia": "bin/tamia.js"
