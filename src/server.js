@@ -54,7 +54,7 @@ export default function server(options, callback) {
 			// Load Webpack main bundle from Webpack dev server
 			if (/<script src="\/build\/main\.js/.test(html)) {
 				html = html.replace(
-					/<script src="\/build\/main\.js(?:\?\d+)?"><\/script>/,
+					/<script src="\/build\/main\.js(?:\?\d+)?"[^>]*><\/script>/,
 					''
 				);
 			}
