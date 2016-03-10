@@ -96,7 +96,7 @@ program
 			console.log('Done in', time, 's');
 			console.log();
 
-			if (!program.compress) {
+			if (!command.compress) {
 				return;
 			}
 
