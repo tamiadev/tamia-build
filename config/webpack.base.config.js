@@ -13,12 +13,10 @@ if (!scripts.length) {
 if (scripts.indexOf('js/main.js') === -1) {
 	throw new Error('Main script not found: "js/main.js".');
 }
-var entries = {
-	main: entries,
-};
-scripts.forEach(function(script) {
+var entries = scripts.reduce(function(entries, script) {
 	entries[path.basename(script, '.js')] = './' + script;
-});
+	return entries;
+}, {});
 
 module.exports = {
 	context: process.cwd(),
