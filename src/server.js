@@ -3,7 +3,7 @@ import webpack from 'webpack';
 import WebpackDevServer from 'webpack-dev-server';
 import express from 'express';
 import staticTransform from 'connect-static-transform';
-import { printWebpackConfig } from './util';
+import { printConfigs } from './util';
 import makeWebpackConfig from '../config/webpack.development.config';
 
 /* eslint-disable no-console */
@@ -12,7 +12,7 @@ export default function server(options, callback) {
 	let webpackConfig = makeWebpackConfig(options);
 
 	if (options.verbose) {
-		printWebpackConfig(webpackConfig);
+		printConfigs(options, webpackConfig);
 	}
 
 	let app = express();
