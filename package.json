@@ -39,6 +39,7 @@
     "fs-extra": "~0.26.5",
     "glob": "~7.0.3",
     "gzip-size": "~3.0.0",
+    "http-rewrite-middleware": "~0.1.6",
     "lodash": "~4.6.1",
     "postcss-loader": "~0.8.1",
     "prettyjson": "~1.1.3",

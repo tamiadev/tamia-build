@@ -3,6 +3,7 @@ import webpack from 'webpack';
 import WebpackDevServer from 'webpack-dev-server';
 import express from 'express';
 import staticTransform from 'connect-static-transform';
+import rewriteModule from 'http-rewrite-middleware';
 import { printConfigs } from './util';
 import makeWebpackConfig from '../config/webpack.development.config';
 
@@ -16,6 +17,11 @@ export default function server(options, callback) {
 	}
 
 	let app = express();
+
+	// Rewrites
+	if (options.rewrites) {
+		app.use(rewriteModule.getMiddleware(options.rewrites));
+	}
 
 	// Inject Webpack bundle
 	app.use(staticTransform({
