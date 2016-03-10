@@ -19,7 +19,7 @@ export default function server(options, callback) {
 
 	// Inject Webpack bundle
 	app.use(staticTransform({
-		root: 'public',
+		root: options.publicDir,
 
 		// The middleware expects a regex, but we can use a duck object to match /yo/index.html as well as /yo/foo?a=1
 		match: {
@@ -84,7 +84,7 @@ export default function server(options, callback) {
 	}));
 
 	// Serve other static assets
-	app.use(express.static('public'));
+	app.use(express.static(options.publicDir));
 
 	app.listen(options.port, options.host, callback);
 

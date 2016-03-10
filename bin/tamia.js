@@ -1,6 +1,8 @@
 #!/usr/bin/env node
 'use strict';
 
+var fs = require('fs');
+var path = require('path');
 var program = require('commander');
 var chalk = require('chalk');
 var Table = require('easy-table');
@@ -9,6 +11,28 @@ var _ = require('lodash');
 var pkg = require('../package.json');
 
 /* eslint-disable no-console */
+
+var defaultOptions = {
+	publicDir: 'public',
+};
+
+/**
+ * Merge default options, project config file (if present), global commander.js options and command options.
+ *
+ * @param {object} program commander.js program.
+ * @param {object} command commander.js command.
+ * @return {object}
+ */
+function aggregateOptions(program, command) {
+	var options = _.merge({}, defaultOptions, program.opts(), command.opts());
+
+	var configFile = path.resolve(process.cwd(), 'config/tamia.config.js');
+	if (fs.existsSync(configFile)) {
+		options = require(configFile)(options);
+	}
+
+	return options;
+}
 
 program
 	.version(pkg.version)
@@ -40,13 +64,14 @@ program
 program
 	.command('bundle')
 	.description('bundle assets')
+	.allowUnknownOption()
 	.option('-u, --no-compress', 'disable compression')
-	.action(function() {
+	.action(function(command) {
 		process.env.NODE_ENV = 'production';
 
 		console.log('Bundling assets...');
 		console.log();
-		require('../lib/bundle').default(program, function(err, stats) {
+		require('../lib/bundle').default(aggregateOptions(program, command), function(err, stats) {
 			if (err) {
 				console.log(err);
 				process.exit(1);
@@ -103,10 +128,11 @@ program
 program
 	.command('server')
 	.description('start dev server')
-	.action(function() {
+	.allowUnknownOption()
+	.action(function(command) {
 		process.env.NODE_ENV = 'development';
 
-		require('../lib/server').default(program, function(err) {
+		require('../lib/server').default(aggregateOptions(program, command), function(err) {
 			if (err) {
 				console.log(err);
 			}
