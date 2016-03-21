@@ -3,6 +3,7 @@ import webpack from 'webpack';
 import WebpackDevServer from 'webpack-dev-server';
 import express from 'express';
 import staticTransform from 'connect-static-transform';
+import serveIndex from 'serve-index';
 import rewriteModule from 'http-rewrite-middleware';
 import { printConfigs } from './util';
 import makeWebpackConfig from '../config/webpack.development.config';
@@ -91,6 +92,7 @@ export default function server(options, callback) {
 
 	// Serve other static assets
 	app.use(express.static(options.publicDir));
+	app.use(serveIndex(options.publicDir, { icons: true }));
 
 	app.listen(options.port, options.host, callback);
 
