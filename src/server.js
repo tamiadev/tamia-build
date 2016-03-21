@@ -54,7 +54,7 @@ export default function server(options, callback) {
 			// Load Webpack main bundle from Webpack dev server
 			if (/<script src="\/build\/main\.js/.test(html)) {
 				html = html.replace(
-					/<script src="\/build\/main\.js(?:\?\d+)?"[^>]*><\/script>/,
+					/<script src="\/build\/main\.js(?:\?[\da-f]+)?"[^>]*><\/script>/,
 					''
 				);
 			}
@@ -65,7 +65,7 @@ export default function server(options, callback) {
 
 			// Replace other bundles with links to Webpack dev server
 			html = html.replace(
-				/<script src="\/build\/(\w+)\.js(?:\?\d+)?"><\/script>/g,
+				/<script src="\/build\/(\w+)\.js(?:\?[\da-f]+)?"><\/script>/g,
 				`<script src="${webpackUrl}/build/$1.js"></script>`
 			);
 
@@ -81,7 +81,7 @@ export default function server(options, callback) {
 
 			// Remove stylesheet link, CSS will be injected by Webpack bundle
 			html = html.replace(
-				/<link href="(http:\/\/[:\w]+.*?)?\/build\/styles\.css(?:\?\d+)?" rel="stylesheet">/,
+				/<link href="(http:\/\/[:\w]+.*?)?\/build\/styles\.css(?:\?[\da-f]+)?" rel="stylesheet">/,
 				'<!-- styles.css was removed by Tâmia dev server -->'
 			);
 
