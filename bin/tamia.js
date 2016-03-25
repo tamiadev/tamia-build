@@ -15,6 +15,7 @@ var pkg = require('../package.json');
 var defaultOptions = {
 	publicDir: 'public',
 	rewrites: [],
+	verbose: false,
 };
 
 /**
