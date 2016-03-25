@@ -14,6 +14,7 @@ var pkg = require('../package.json');
 
 var defaultOptions = {
 	publicDir: 'public',
+	rewrites: [],
 };
 
 /**
@@ -40,7 +41,6 @@ program
 	.option('-v, --verbose', 'print debug information')
 	.option('-h, --host <host>', 'dev server host (localhost)', 'localhost')
 	.option('-p, --port <port>', 'dev server port (6601)', 6601)
-	.option('-w, --webpack-port <port>', 'webpack dev server port (6602)', 6602)
 ;
 
 program
@@ -135,10 +135,6 @@ program
 		require('../lib/server').default(aggregateOptions(program, command), function(err) {
 			if (err) {
 				console.log(err);
-			}
-			else {
-				console.log('Listening at', chalk.underline('http://' + program.host + ':' + program.port));
-				console.log();
 			}
 		});
 	})
