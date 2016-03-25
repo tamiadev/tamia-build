@@ -1,7 +1,7 @@
 import webpack from 'webpack';
 import webpackDevMiddleware from 'webpack-dev-middleware';
 import browserSync from 'browser-sync';
-import rewriteModule from 'http-rewrite-middleware';
+import modRewrite from 'connect-modrewrite';
 import stripAnsi from 'strip-ansi';
 import { printConfigs } from './util';
 import makeWebpackConfig from '../config/webpack.development.config';
@@ -45,9 +45,9 @@ export default function server(options, callback) {
 
 	// Rewrites
 	let rewrites = [
-		{ from: '^([^\.]*\\w)$', to: '$1.html' },
+		'^([^\.]*\\w)$ $1.html',
 	].concat(options.rewrites);
-	middleware.push(rewriteModule.getMiddleware(rewrites));
+	middleware.push(modRewrite(rewrites));
 
 	// Webpack dev server
 	let devServerConfig = {
