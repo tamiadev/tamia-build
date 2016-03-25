@@ -1,12 +1,9 @@
 var webpack = require('webpack');
 var merge = require('webpack-merge');
-var ExtractTextPlugin = require('extract-text-webpack-plugin');
 var baseConfig = require('./webpack.base.config');
 
 module.exports = function(options) {
-	var plugins = [
-		new ExtractTextPlugin('styles.css'),
-	];
+	var plugins = [];
 
 	if (options.compress) {
 		plugins.push(new webpack.optimize.UglifyJsPlugin({
@@ -22,19 +19,7 @@ module.exports = function(options) {
 
 	return merge.smart(baseConfig, {
 		devtool: false,
-
+		debug: false,
 		plugins: plugins,
-
-		module: {
-			loaders: [
-				{
-					test: /\.styl$/,
-					loader: ExtractTextPlugin.extract(
-						'style',
-						['css', 'postcss', 'stylus']
-					),
-				},
-			],
-		},
 	});
 };

@@ -80,10 +80,10 @@ export default function server(options, callback) {
 				`<link href="${webpackUrl}/build/$1.css" rel="stylesheet">`
 			);
 
-			// Remove stylesheet link, CSS will be injected by Webpack bundle
+			// Remove stylesheet with a link to Webpack dev server
 			html = html.replace(
-				/<link href="(http:\/\/[:\w]+.*?)?\/build\/styles\.css(?:\?[\da-f]+)?" rel="stylesheet">/,
-				'<!-- styles.css was removed by Tâmia dev server -->'
+				/<link href="\/build\/(styles)\.css(?:\?[\da-f]+)?" rel="stylesheet">/,
+				`<link href="${webpackUrl}/build/$1.css" rel="stylesheet">`
 			);
 
 			send(html, { 'Content-Type': 'text/html; charset=utf-8' });

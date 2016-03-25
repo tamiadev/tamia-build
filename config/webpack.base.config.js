@@ -2,6 +2,7 @@ var path = require('path');
 var glob = require('glob');
 var webpack = require('webpack');
 var autoprefixer = require('autoprefixer');
+var ExtractTextPlugin = require('extract-text-webpack-plugin');
 
 var env = process.env.NODE_ENV || 'development';
 
@@ -41,6 +42,7 @@ module.exports = {
 	},
 
 	plugins: [
+		new ExtractTextPlugin('styles.css'),
 		new webpack.DefinePlugin({
 			'DEBUG': JSON.stringify(env === 'production' ? 'true' : 'false'),
 			'process.env': {
@@ -62,12 +64,10 @@ module.exports = {
 			},
 			{
 				test: /\.styl$/,
-				loaders: [
+				loader: ExtractTextPlugin.extract(
 					'style',
-					'css',
-					'postcss',
-					'stylus',
-				],
+					['css', 'postcss', 'stylus']
+				),
 			},
 		],
 	},
