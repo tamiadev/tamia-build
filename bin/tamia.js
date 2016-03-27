@@ -40,7 +40,6 @@ program
 	.version(pkg.version)
 	.description(pkg.description)
 	.option('-v, --verbose', 'print debug information')
-	.option('-h, --host <host>', 'dev server host (localhost)', 'localhost')
 	.option('-p, --port <port>', 'dev server port (6601)', 6601)
 ;
 

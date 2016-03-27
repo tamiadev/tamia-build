@@ -65,8 +65,6 @@ export default function server(options, callback) {
 	}
 	middleware.push(webpackDevMiddleware(bundler, devServerConfig));
 
-	let webpackUrl = `http://${options.host}:${options.port}`;
-
 	bs.init({
 		server: {
 			baseDir: options.publicDir,
@@ -78,7 +76,6 @@ export default function server(options, callback) {
 		},
 		port: options.port,
 		open: false,
-		online: false,
 		reloadOnRestart: true,
 		minify: !options.verbose,
 		notify: options.verbose,
@@ -106,24 +103,14 @@ export default function server(options, callback) {
 			},
 		],
 		rewriteRules: [
-			// Replace JavaScript bundles with links to Webpack dev server
-			{
-				match: /<script src="(\/build\/\w+\.js)(?:\?[\da-f]+)?"><\/script>/g,
-				replace: `<script src="${webpackUrl}$1"></script>`,
-			},
-			// Replace stylesheet with a link to Webpack dev server
-			{
-				match: /<link href="(\/build\/\w+\.css)(?:\?[\da-f]+)?" rel="stylesheet">/g,
-				replace: `<link href="${webpackUrl}$1" rel="stylesheet">`,
-			},
-			// Replace inlined assets with links to Webpack dev server
+			// Replace inlined assets with Webpack bundles
 			{
 				match: /<script>\/\*(\w+)\*\/[\s\S]*?<\/script>/gm,
-				replace: `<script src="${webpackUrl}/build/$1.js"></script>`,
+				replace: `<script src="/build/$1.js"></script>`,
 			},
 			{
 				match: /<style>\/\*(\w+)\*\/[\s\S]*?<\/style>/gm,
-				replace: `<link href="${webpackUrl}/build/$1.css" rel="stylesheet">`,
+				replace: `<link href="/build/$1.css" rel="stylesheet">`,
 			},
 		],
 		middleware,

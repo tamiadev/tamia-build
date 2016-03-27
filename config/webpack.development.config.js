@@ -2,15 +2,13 @@ var path = require('path');
 var merge = require('webpack-merge');
 var baseConfig = require('./webpack.base.config');
 
-module.exports = function(options) {
-	var url = 'http://' + options.host + ':' + options.port;
-
+module.exports = function() {
 	return merge.smart(baseConfig, {
 		devtool: 'eval',
 		debug: true,
 
 		output: {
-			publicPath: url + '/build/',
+			publicPath: '/build/',
 		},
 
 		resolve: {
