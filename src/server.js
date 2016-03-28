@@ -106,11 +106,11 @@ export default function server(options, callback) {
 			// Replace inlined assets with Webpack bundles
 			{
 				match: /<script>\/\*(\w+)\*\/[\s\S]*?<\/script>/gm,
-				replace: `/* Inlined in production */<script src="/build/$1.js"></script>`,
+				replace: `<!-- Inlined in production --><script src="/build/$1.js"></script>`,
 			},
 			{
 				match: /<style>\/\*(\w+)\*\/[\s\S]*?<\/style>/gm,
-				replace: `/* Inlined in production */<link href="/build/$1.css" rel="stylesheet">`,
+				replace: `<!-- Inlined in production --><link href="/build/$1.css" rel="stylesheet">`,
 			},
 		],
 		middleware,
