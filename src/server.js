@@ -44,9 +44,10 @@ export default function server(options, callback) {
 	];
 
 	// Rewrites
-	let rewrites = [
+	let rewrites = options.rewrites.concat([
 		'^([^\.]*\\w)$ $1.html',
-	].concat(options.rewrites);
+	]);
+
 	middleware.push(modRewrite(rewrites));
 
 	// Webpack dev server
