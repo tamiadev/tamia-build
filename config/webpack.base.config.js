@@ -44,7 +44,7 @@ module.exports = {
 	plugins: [
 		new ExtractTextPlugin('styles.css'),
 		new webpack.DefinePlugin({
-			'DEBUG': JSON.stringify(env === 'production' ? 'true' : 'false'),
+			'DEBUG': JSON.stringify(env !== 'production'),
 			'process.env': {
 				NODE_ENV: JSON.stringify(env),
 			},
