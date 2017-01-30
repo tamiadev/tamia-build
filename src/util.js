@@ -1,9 +1,9 @@
-import prettyjson from 'prettyjson';
-import chalk from 'chalk';
+const prettyjson = require('prettyjson');
+const chalk = require('chalk');
 
 /* eslint-disable no-console */
 
-export function printConfig(config, title) {
+function printConfig(config, title) {
 	console.log();
 	console.log(chalk.underline(chalk.bold(title)));
 	console.log();
@@ -11,7 +11,12 @@ export function printConfig(config, title) {
 	console.log();
 }
 
-export function printConfigs(options, webpackConfig) {
+function printConfigs(options, webpackConfig) {
 	printConfig(options, 'Options');
 	printConfig(webpackConfig, 'Webpack config');
 }
+
+module.exports = {
+	printConfig,
+	printConfigs,
+};

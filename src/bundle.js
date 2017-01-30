@@ -1,15 +1,15 @@
-import webpack from 'webpack';
-import { printConfigs } from './util';
-import makeWebpackConfig from '../config/webpack.production.config';
+const webpack = require('webpack');
+const printConfigs = require('./util').printConfigs;
+const makeWebpackConfig = require('../config/webpack.config');
 
-export default function bundle(options, callback) {
-	let webpackConfig = makeWebpackConfig(options);
+module.exports = function bundle(options, callback) {
+	const webpackConfig = makeWebpackConfig('production', options);
 
 	if (options.verbose) {
 		printConfigs(options, webpackConfig);
 	}
 
-	webpack(webpackConfig, (err, stats) => {
+	return webpack(webpackConfig, (err, stats) => {
 		callback(err, stats);
 	});
-}
+};

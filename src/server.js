@@ -1,20 +1,20 @@
-import webpack from 'webpack';
-import webpackDevMiddleware from 'webpack-dev-middleware';
-import browserSync from 'browser-sync';
-import modRewrite from 'connect-modrewrite';
-import stripAnsi from 'strip-ansi';
-import { printConfigs } from './util';
-import makeWebpackConfig from '../config/webpack.development.config';
+const webpack = require('webpack');
+const webpackDevMiddleware = require('webpack-dev-middleware');
+const browserSync = require('browser-sync');
+const modRewrite = require('connect-modrewrite');
+const stripAnsi = require('strip-ansi');
+const printConfigs = require('./util').printConfigs;
+const makeWebpackConfig = require('../config/webpack.config');
 
-export default function server(options, callback) {
-	let webpackConfig = makeWebpackConfig(options);
+module.exports = function server(options, callback) {
+	const webpackConfig = makeWebpackConfig('development', options);
 
 	if (options.verbose) {
 		printConfigs(options, webpackConfig);
 	}
 
-	let bs = browserSync.create();
-	let bundler = webpack(webpackConfig);
+	const bs = browserSync.create();
+	const bundler = webpack(webpackConfig);
 
 	let jsChanged = false;
 	let cssChanged = false;
@@ -22,11 +22,12 @@ export default function server(options, callback) {
 	// Reload all devices when bundle is complete
 	bundler.plugin('done', stats => {
 		if (stats.hasErrors() || stats.hasWarnings()) {
-			return bs.sockets.emit('fullscreen:message', {
+			bs.sockets.emit('fullscreen:message', {
 				title: 'Webpack Error',
 				body: stripAnsi(stats.toString()),
 				timeout: 100000,
 			});
+			return;
 		}
 		if (jsChanged) {
 			// Reload the page
@@ -40,18 +41,18 @@ export default function server(options, callback) {
 		}
 	});
 
-	let middleware = [
+	const middleware = [
 	];
 
 	// Rewrites
-	let rewrites = options.rewrites.concat([
-		'^([^\.]*\\w)$ $1.html',
+	const rewrites = options.rewrites.concat([
+		'^([^.]*\\w)$ $1.html',
 	]);
 
 	middleware.push(modRewrite(rewrites));
 
 	// Webpack dev server
-	let devServerConfig = {
+	const devServerConfig = {
 		publicPath: webpackConfig.output.publicPath,
 	};
 	if (options.verbose) {
@@ -87,7 +88,7 @@ export default function server(options, callback) {
 		files: [
 			`${options.publicDir}/**/*.*`,
 			{
-				match: `js/**/*.js`,
+				match: 'js/**/*.js',
 				fn(event) {
 					if (event === 'change') {
 						jsChanged = true;
@@ -95,7 +96,7 @@ export default function server(options, callback) {
 				},
 			},
 			{
-				match: `styles/**/*.styl`,
+				match: '{styles,templates}/**/*.pcss',
 				fn(event) {
 					if (event === 'change') {
 						cssChanged = true;
@@ -107,13 +108,15 @@ export default function server(options, callback) {
 			// Replace inlined assets with Webpack bundles
 			{
 				match: /<script>\/\*(\w+)\*\/[\s\S]*?<\/script>/gm,
-				replace: `<!-- Inlined in production --><script src="/build/$1.js"></script>`,
+				replace: '<!-- Inlined in production --><script src="/build/$1.js"></script>',
 			},
 			{
 				match: /<style>\/\*(\w+)\*\/[\s\S]*?<\/style>/gm,
-				replace: `<!-- Inlined in production --><link href="/build/$1.css" rel="stylesheet">`,
+				replace: '<!-- Inlined in production --><link href="/build/$1.css" rel="stylesheet">',
 			},
 		],
 		middleware,
 	}, callback);
-}
+
+	return bundler;
+};

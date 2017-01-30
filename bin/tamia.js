@@ -1,22 +1,26 @@
 #!/usr/bin/env node
-'use strict';
 
-var fs = require('fs');
-var path = require('path');
-var program = require('commander');
-var chalk = require('chalk');
-var Table = require('easy-table');
-var gzipSize = require('gzip-size');
-var _ = require('lodash');
-var pkg = require('../package.json');
+const fs = require('fs');
+const path = require('path');
+const program = require('commander');
+const chalk = require('chalk');
+const Table = require('easy-table');
+const gzipSize = require('gzip-size');
+const _ = require('lodash');
+const pkg = require('../package.json');
 
 /* eslint-disable no-console */
 
-var defaultOptions = {
+const defaultOptions = {
 	publicDir: 'public',
 	rewrites: [],
 	verbose: false,
 };
+
+process.on('uncaughtException', error => {
+	console.log(chalk.red(error.toString()));
+	console.log(error.stack);  // TODO: show only in verbose mode
+});
 
 /**
  * Merge default options, project config file (if present), global commander.js options and command options.
@@ -26,9 +30,9 @@ var defaultOptions = {
  * @return {object}
  */
 function aggregateOptions(program, command) {
-	var options = _.merge({}, defaultOptions, program.opts(), command.opts());
+	let options = _.merge({}, defaultOptions, program.opts(), command.opts());
 
-	var configFile = path.resolve(process.cwd(), 'config/tamia.config.js');
+	const configFile = path.resolve(process.cwd(), 'config/tamia.config.js');
 	if (fs.existsSync(configFile)) {
 		options = require(configFile)(options);
 	}
@@ -44,24 +48,6 @@ program
 ;
 
 program
-	.command('init')
-	.description('initialize project')
-	.action(function() {
-		console.log('Initializing project...');
-		console.log();
-		require('../lib/init').default(function(err) {
-			if (err) {
-				console.log(err);
-			}
-			else {
-				console.log();
-				console.log('Done.');
-			}
-		});
-	})
-;
-
-program
 	.command('bundle')
 	.description('bundle assets')
 	.allowUnknownOption()
@@ -71,14 +57,13 @@ program
 
 		console.log('Bundling assets...');
 		console.log();
-		require('../lib/bundle').default(aggregateOptions(program, command), function(err, stats) {
+		require('../src/bundle')(aggregateOptions(program, command), function(err, stats) {
 			if (err) {
-				console.log(err);
 				process.exit(1);
 			}
 
 			if (stats.hasErrors()) {
-				var error = stats.compilation.errors[0];
+				const error = stats.compilation.errors[0];
 				console.log();
 				console.log(chalk.red(error.toString()));
 				process.exit(1);
@@ -92,7 +77,7 @@ program
 			}
 
 			// Print time
-			var time = (stats.endTime - stats.startTime) / 1000;
+			const time = (stats.endTime - stats.startTime) / 1000;
 			console.log('Done in', time, 's');
 			console.log();
 
@@ -101,18 +86,22 @@ program
 			}
 
 			// Print stats
-			var table = new Table();
+			const table = new Table();
 			Object.keys(stats.compilation.assets).forEach(function(name) {
-				var asset = stats.compilation.assets[name];
-				var code = asset._value;
+				if (name === 'styles.js') {
+					return;
+				}
+
+				const asset = stats.compilation.assets[name];
+				let code = asset._value || '';
 				if (!code && asset.children) {
 					code = asset.children.reduce(function(concatenated, child) {
 						return concatenated + child._value;
 					}, '');
 				}
 
-				var size = code.length;
-				var gzipped = gzipSize.sync(code);
+				const size = code.length;
+				const gzipped = gzipSize.sync(code);
 
 				table.cell('File', chalk.bold(name));
 				table.cell('Size, KB', size / 1024, Table.number(2));
@@ -132,7 +121,7 @@ program
 	.action(function(command) {
 		process.env.NODE_ENV = 'development';
 
-		require('../lib/server').default(aggregateOptions(program, command), function(err) {
+		require('../src/server')(aggregateOptions(program, command), function(err) {
 			if (err) {
 				console.log(err);
 			}

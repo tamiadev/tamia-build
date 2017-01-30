@@ -1,5 +1,9 @@
 {
 	"presets": [
-		"node5",
+		["env", {
+			"targets": {
+				"node": "current"
+			}
+		}]
 	]
 }
