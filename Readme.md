@@ -8,12 +8,22 @@ Webpack builder and dev server for [Tâmia](http://tamiadev.github.io/tamia/).
 
 ```bash
 $ npm install --save-dev tamia-build
-./node_modules/.bin/tamia init
+```
+
+Add to your `package.json`:
+
+```json5
+{
+  "scripts": {
+    "start": "tamia server",
+    "bundle": "tamia bundle"
+  }
+}
 ```
 
 ## Usage
 
-You will have two npm scripts:
+Use new npm scripts:
 
 * `npm start` to start a dev server.
 * `npm run bundle` to make a production build of JavaScript and CSS.
