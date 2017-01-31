@@ -60,7 +60,7 @@
     "webpack-merge": "^2.6.1"
   },
   "peerDependencies": {
-    "tamia": "^3.0.0.alpha"
+    "tamia": "^3.0.0-aplha"
   },
   "devDependencies": {
     "babel-cli": "^6.22.2",
@@ -69,7 +69,7 @@
     "eslint-config-tamia": "^3.3.2",
     "semantic-release": "^6.3.2",
     "semantic-release-tamia": "^1.1.0",
-    "tamia": "3.0.0.alpha.2"
+    "tamia": "3.0.0-aplha.2"
   },
   "files": [
     "bin",
