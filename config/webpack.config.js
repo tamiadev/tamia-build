@@ -32,7 +32,7 @@ const entries = scripts.reduce(function(entries, script) {
 // Webpack loaders require to pass a file, so just pass the current file, it will be ignored by the loader anyway.
 entries.styles = `${require.resolve('../src/templates-loader')}!${__filename}`;
 
-const tamiaComponentsPath = path.dirname(require.resolve('tamia/src/components'));
+const tamiaComponentsPath = path.dirname(require.resolve('tamia/lib/components'));
 
 // CSS Modules locations
 const cssModulesPaths = [
@@ -48,8 +48,8 @@ module.exports = function(env, options) {
 			options: {
 				postcss: [
 					injectStyles(source('styles/config.pcss')),
-					injectStyles(require.resolve('tamia/src/styles/core.pcss')),
-					injectStyles(require.resolve('tamia/src/styles/config.pcss')),
+					injectStyles(require.resolve('tamia/lib/styles/core.pcss')),
+					injectStyles(require.resolve('tamia/lib/styles/config.pcss')),
 					require('postcss-extend')(),
 					require('postcss-cssnext')({
 						browsers,
