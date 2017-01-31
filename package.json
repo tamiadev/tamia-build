@@ -63,7 +63,6 @@
     "tamia": "^3.0.0-aplha"
   },
   "devDependencies": {
-    "babel-cli": "^6.22.2",
     "babel-eslint": "^7.1.1",
     "eslint": "^3.14.1",
     "eslint-config-tamia": "^3.3.2",
@@ -74,8 +73,7 @@
   "files": [
     "bin",
     "config",
-    "lib",
-    "templates"
+    "src"
   ],
   "engines": {
     "node": ">=7"
