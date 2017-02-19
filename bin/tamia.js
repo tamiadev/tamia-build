@@ -3,6 +3,7 @@
 const fs = require('fs');
 const path = require('path');
 const program = require('commander');
+const minimist = require('minimist');
 const chalk = require('chalk');
 const Table = require('easy-table');
 const gzipSize = require('gzip-size');
@@ -30,11 +31,12 @@ process.on('uncaughtException', error => {
  * @return {object}
  */
 function aggregateOptions(program, command) {
+	const argv = minimist(process.argv.slice(2));
 	let options = _.merge({}, defaultOptions, program.opts(), command.opts());
 
 	const configFile = path.resolve(process.cwd(), 'config/tamia.config.js');
 	if (fs.existsSync(configFile)) {
-		options = require(configFile)(options);
+		options = require(configFile)(options, argv);
 	}
 
 	return options;
