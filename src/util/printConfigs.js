@@ -16,7 +16,4 @@ function printConfigs(options, webpackConfig) {
 	printConfig(webpackConfig, 'Webpack config');
 }
 
-module.exports = {
-	printConfig,
-	printConfigs,
-};
+module.exports = printConfigs;

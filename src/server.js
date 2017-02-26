@@ -3,11 +3,13 @@ const webpackDevMiddleware = require('webpack-dev-middleware');
 const browserSync = require('browser-sync');
 const modRewrite = require('connect-modrewrite');
 const stripAnsi = require('strip-ansi');
-const printConfigs = require('./util').printConfigs;
+const getScripts = require('./util/getScripts');
+const printConfigs = require('./util/printConfigs');
 const makeWebpackConfig = require('../config/webpack.config');
 
 module.exports = function server(options, callback) {
-	const webpackConfig = makeWebpackConfig('development', options);
+	const scripts = getScripts();
+	const webpackConfig = makeWebpackConfig(scripts, 'development', options);
 
 	if (options.verbose) {
 		printConfigs(options, webpackConfig);

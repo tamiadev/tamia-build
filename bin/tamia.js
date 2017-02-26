@@ -18,10 +18,12 @@ const defaultOptions = {
 	verbose: false,
 };
 
-process.on('uncaughtException', error => {
+process.on('uncaughtException', printError);
+
+function printError(error) {
 	console.log(chalk.red(error.toString()));
 	console.log(error.stack);  // TODO: show only in verbose mode
-});
+}
 
 /**
  * Merge default options, project config file (if present), global commander.js options and command options.
@@ -42,6 +44,14 @@ function aggregateOptions(program, command) {
 	return options;
 }
 
+function formatPercent(size, gzipped) {
+	const percent = Math.round((gzipped / size) * 100);
+	return isNaN(percent)
+		? '100%'
+		: `${percent}%`
+	;
+}
+
 program
 	.version(pkg.version)
 	.description(pkg.description)
@@ -59,60 +69,50 @@ program
 
 		console.log('Bundling assets...');
 		console.log();
-		require('../src/bundle')(aggregateOptions(program, command), function(err, stats) {
-			if (err) {
-				process.exit(1);
-			}
-
-			if (stats.hasErrors()) {
-				const error = stats.compilation.errors[0];
-				console.log();
-				console.log(chalk.red(error.toString()));
-				process.exit(1);
-			}
-
-			if (stats.hasWarnings()) {
-				stats.compilation.warnings.forEach(function(item) {
+		require('../src/bundle')(aggregateOptions(program, command))
+			.then(({ stats, assets }) => {
+				if (stats.hasErrors()) {
+					const error = stats.compilation.errors[0];
 					console.log();
-					console.log(chalk.yellow('Warning: ', item.message));
-				});
-			}
+					console.log(chalk.red(error.toString()));
+					process.exit(1);
+				}
 
-			// Print time
-			const time = (stats.endTime - stats.startTime) / 1000;
-			console.log('Done in', time, 's');
-			console.log();
+				if (stats.hasWarnings()) {
+					stats.compilation.warnings.forEach(function(item) {
+						console.log();
+						console.log(chalk.yellow('Warning: ', item.message));
+					});
+				}
 
-			if (!command.compress) {
-				return;
-			}
+				// Print time
+				const time = (stats.endTime - stats.startTime) / 1000;
+				console.log('Done in', time, 's');
+				console.log();
 
-			// Print stats
-			const table = new Table();
-			Object.keys(stats.compilation.assets).forEach(function(name) {
-				if (name === 'styles.js') {
+				if (!command.compress) {
 					return;
 				}
 
-				const asset = stats.compilation.assets[name];
-				let code = asset._value || '';
-				if (!code && asset.children) {
-					code = asset.children.reduce(function(concatenated, child) {
-						return concatenated + child._value;
-					}, '');
-				}
-
-				const size = code.length;
-				const gzipped = gzipSize.sync(code);
-
-				table.cell('File', chalk.bold(name));
-				table.cell('Size, KB', size / 1024, Table.number(2));
-				table.cell('Gzipped, KB', gzipped / 1024, Table.number(2));
-				table.cell('Ratio', _.padStart(Math.round((gzipped / size) * 100) + '%', 5));
-				table.newRow();
+				// Print stats
+				const table = new Table();
+				const sortedAssets = _.sortBy(assets, 'filename');
+				sortedAssets.map(({ code, filename }) => {
+					const name = path.basename(filename);
+					const size = code.length;
+					const gzipped = size > 0 ? gzipSize.sync(code) : 0;
+					table.cell('File', chalk.bold(name));
+					table.cell('Size, KB', size / 1024, Table.number(2));
+					table.cell('Gzipped, KB', gzipped / 1024, Table.number(2));
+					table.cell('Ratio', _.padStart(formatPercent(size, gzipped), 5));
+					table.newRow();
+				});
+				console.log(table.toString());
+			})
+			.catch(err => {
+				printError(err);
+				process.exit(1);
 			});
-			console.log(table.toString());
-		});
 	})
 ;
 
@@ -125,7 +125,7 @@ program
 
 		require('../src/server')(aggregateOptions(program, command), function(err) {
 			if (err) {
-				console.log(err);
+				printError(err);
 			}
 		});
 	})
