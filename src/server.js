@@ -109,11 +109,11 @@ module.exports = function server(options, callback) {
 		rewriteRules: [
 			// Replace inlined assets with Webpack bundles
 			{
-				match: /<script>\/\*(\w+)\*\/[\s\S]*?<\/script>/gm,
+				match: /<script>\/\*([^*]+)\*\/[\s\S]*?<\/script>/gm,
 				replace: '<!-- Inlined in production --><script src="/build/$1.js"></script>',
 			},
 			{
-				match: /<style>\/\*(\w+)\*\/[\s\S]*?<\/style>/gm,
+				match: /<style>\/\*([^*]+)\*\/[\s\S]*?<\/style>/gm,
 				replace: '<!-- Inlined in production --><link href="/build/$1.css" rel="stylesheet">',
 			},
 		],
