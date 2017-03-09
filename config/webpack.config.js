@@ -73,6 +73,13 @@ module.exports = function(scripts, env, options) {
 				verbose: options.verbose,
 			}),
 			new OptimizeCssAssetsPlugin({
+				cssProcessorOptions: {
+					discardComments: {
+						removeAll: true,
+					},
+					discardOverridden: true,
+					mergeRules: true,
+				},
 				canPrint: options.verbose,
 			})
 		);
