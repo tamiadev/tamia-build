@@ -34,8 +34,7 @@ module.exports = function server(options, callback) {
 		if (jsChanged) {
 			// Reload the page
 			bs.reload();
-			jsChanged = false;
-			cssChanged = false;
+			jsChanged = cssChanged = false;
 		}
 		else if (cssChanged) {
 			// Inject CSS
