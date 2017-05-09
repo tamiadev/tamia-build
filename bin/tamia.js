@@ -97,7 +97,7 @@ program
 				// Print stats
 				const table = new Table();
 				const sortedAssets = _.sortBy(assets, 'filename');
-				sortedAssets.map(({ code, filename }) => {
+				sortedAssets.map(({ code = '', filename }) => {
 					const name = path.basename(filename);
 					const size = code.length;
 					const gzipped = size > 0 ? gzipSize.sync(code) : 0;
