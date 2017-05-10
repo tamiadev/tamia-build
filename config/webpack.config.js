@@ -55,7 +55,7 @@ module.exports = function(scripts, env, options) {
 			ignoreOrder: true,
 		}),
 		new webpack.DefinePlugin({
-			'DEBUG': JSON.stringify(isDev),
+			DEBUG: JSON.stringify(isDev),
 			'process.env': {
 				NODE_ENV: JSON.stringify(env),
 			},
