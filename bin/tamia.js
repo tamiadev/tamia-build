@@ -69,7 +69,7 @@ program
 
 		console.log('Bundling assets...');
 		console.log();
-		require('../src/bundle')(aggregateOptions(program, command))
+		require('../lib/bundle')(aggregateOptions(program, command))
 			.then(({ stats, assets }) => {
 				if (stats.hasErrors()) {
 					const error = stats.compilation.errors[0];
@@ -123,7 +123,7 @@ program
 	.action(function(command) {
 		process.env.NODE_ENV = 'development';
 
-		require('../src/server')(aggregateOptions(program, command), function(err) {
+		require('../lib/server')(aggregateOptions(program, command), function(err) {
 			if (err) {
 				printError(err);
 			}
