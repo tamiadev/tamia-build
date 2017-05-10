@@ -33,7 +33,7 @@ module.exports = function(scripts, env, options) {
 	}, {});
 
 	// Load user templates via Webpack to make hot reload and CSS Modules work.
-	entries.styles = `${require.resolve('../src/templates-loader')}!`;
+	entries.styles = `${require.resolve('../lib/templates-loader')}!`;
 
 	const plugins = [
 		new webpack.LoaderOptionsPlugin({
