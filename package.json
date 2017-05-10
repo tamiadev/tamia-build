@@ -81,7 +81,7 @@
   "files": [
     "bin",
     "config",
-    "src"
+    "lib"
   ],
   "engines": {
     "node": ">=6"
