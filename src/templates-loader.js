@@ -23,7 +23,7 @@ module.exports.pitch = function() {
 	return `
 if (module.hot) {
 	module.hot.accept([])
-}	
+}
 ${modules.map(requireIt).join('\n')}
 `;
 };

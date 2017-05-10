@@ -73,7 +73,7 @@
     "eslint-config-tamia": "^3.3.2",
     "semantic-release": "^6.3.2",
     "semantic-release-tamia": "^1.1.1",
-    "tamia": "3.0.0-aplha.5"
+    "tamia": "3.0.0-aplha.11"
   },
   "files": [
     "bin",
@@ -81,7 +81,7 @@
     "src"
   ],
   "engines": {
-    "node": ">=7.6"
+    "node": ">=6"
   },
   "release": {
     "analyzeCommits": "semantic-release-tamia/analyzeCommits",
