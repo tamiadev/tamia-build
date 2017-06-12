@@ -79,6 +79,7 @@ module.exports = function(scripts, env, options) {
 					},
 					discardOverridden: true,
 					mergeRules: true,
+					reduceIdents: false,
 				},
 				canPrint: options.verbose,
 			})
