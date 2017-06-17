@@ -15,13 +15,17 @@ const injectStyles = cssFilePath => postCssInject({
 	injectTo: 'fileStart',
 });
 
-const tamiaComponentsPath = source('node_modules/tamia/lib/components');
+const tamiaComponentsPath = path.join(path.dirname(require.resolve('tamia')), 'components');
 
 // CSS Modules locations
 const cssModulesPaths = [
 	tamiaComponentsPath,
 	source('templates'),
 ];
+
+const postcssLoader = {
+	loader: require.resolve('postcss-loader'),
+};
 
 module.exports = function(scripts, env, options) {
 	const isDev = env !== 'production';
@@ -110,7 +114,7 @@ module.exports = function(scripts, env, options) {
 					],
 					use: [
 						{
-							loader: 'babel-loader',
+							loader: require.resolve('babel-loader'),
 							options: {
 								babelrc: false,
 								presets: [babelPreset(env)],
@@ -122,17 +126,17 @@ module.exports = function(scripts, env, options) {
 					test: /\.pcss$/,
 					include: cssModulesPaths,
 					loader: ExtractTextPlugin.extract({
-						fallback: 'style-loader',
+						fallback: require.resolve('style-loader'),
 						use: [
 							{
-								loader: 'css-loader',
+								loader: require.resolve('css-loader'),
 								query: {
 									importLoaders: 1,
 									modules: true,
 									localIdentName: '[name]--[local]',
 								},
 							},
-							'postcss-loader',
+							postcssLoader,
 						],
 					}),
 				},
@@ -140,15 +144,15 @@ module.exports = function(scripts, env, options) {
 					test: /\.pcss$/,
 					exclude: cssModulesPaths,
 					loader: ExtractTextPlugin.extract({
-						fallback: 'style-loader',
+						fallback: require.resolve('style-loader'),
 						use: [
 							{
-								loader: 'css-loader',
+								loader: require.resolve('css-loader'),
 								query: {
 									importLoaders: 1,
 								},
 							},
-							'postcss-loader',
+							postcssLoader,
 						],
 					}),
 				},

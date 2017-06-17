@@ -1,3 +1,4 @@
+const path = require('path');
 const webpack = require('webpack');
 const webpackDevMiddleware = require('webpack-dev-middleware');
 const browserSync = require('browser-sync');
@@ -34,7 +35,8 @@ module.exports = function server(options, callback) {
 		if (jsChanged) {
 			// Reload the page
 			bs.reload();
-			jsChanged = cssChanged = false;
+			jsChanged = false;
+			cssChanged = false;
 		}
 		else if (cssChanged) {
 			// Inject CSS
@@ -85,7 +87,7 @@ module.exports = function server(options, callback) {
 		notify: options.verbose,
 		logFileChanges: options.verbose,
 		plugins: [
-			'bs-fullscreen-message',
+			path.dirname(require.resolve('bs-fullscreen-message')),
 		],
 		files: [
 			`${options.publicDir}/**/*.*`,
