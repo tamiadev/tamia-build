@@ -11,6 +11,9 @@
     "prepublish": "npm run compile",
     "compile": "babel -d lib/ src/",
     "compile:watch": "babel --watch -d lib/ src/",
+    "demo:start": "cd demo && ../bin/tamia.js server",
+    "demo:bundle": "cd demo && ../bin/tamia.js bundle",
+    "demo:build": "cd demo && node src",
     "semantic-release": "semantic-release pre && npm publish && semantic-release post"
   },
   "homepage": "http://tamiadev.github.io/tamia/",
@@ -76,8 +79,9 @@
     "eslint": "^3.16.1",
     "eslint-config-tamia": "^3.3.2",
     "semantic-release": "^6.3.2",
+    "fledermaus": "^7.0.0",
     "semantic-release-tamia": "^1.1.1",
-    "tamia": "3.0.0-aplha.11"
+    "tamia": "^3.0.0-aplha.12"
   },
   "files": [
     "bin",
