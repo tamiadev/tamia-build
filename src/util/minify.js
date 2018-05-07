@@ -1,12 +1,13 @@
 const path = require('path');
-const butternut = require('butternut');
+const UglifyJS = require('uglify-js');
 
 module.exports = function(code, filename) {
 	return new Promise(resolve => {
 		if (path.extname(filename) === '.js') {
 			resolve(
-				butternut.squash(code, {
-					sourceMap: false,
+				UglifyJS.minify(code, {
+					ie8: false,
+					ecma: 5,
 				}).code
 			);
 		}
